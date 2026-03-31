@@ -1,0 +1,668 @@
+
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the ReFurrm Scan platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user.",
+          "format": "uuid"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the user."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the user."
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "The user's primary ZIP code for location-based services."
+        },
+        "ambassadorId": {
+          "type": "string",
+          "description": "The ID of the Ambassador assigned to this user's region."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the user account was created.",
+          "format": "date-time"
+        },
+        "tier": {
+          "type": "string",
+          "description": "The user's membership tier.",
+          "enum": [
+            "Community",
+            "Pro",
+            "Ambassador"
+          ]
+        },
+        "roles": {
+          "type": "array",
+          "description": "A list of roles assigned to the user, e.g., 'Ambassador'.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subscriptionStatus": {
+          "type": "string",
+          "description": "The current status of the user's subscription (if applicable).",
+          "enum": [
+            "active",
+            "inactive",
+            "past_due"
+          ]
+        },
+        "stripeCustomerId": {
+          "type": "string",
+          "description": "The user's Stripe customer ID for billing."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "tier"
+      ]
+    },
+    "Item": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Item",
+      "type": "object",
+      "description": "Represents an item listed on the ReFurrm Scan marketplace.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the item.",
+          "format": "uuid"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who listed this item."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the item."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the item."
+        },
+        "price": {
+          "type": "number",
+          "description": "The user-defined price of the item."
+        },
+        "aiEstimatedValue": {
+          "type": "number",
+          "description": "The market value of the item as estimated by AI."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the image for the item.",
+          "format": "uri"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the item was listed.",
+          "format": "date-time"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the item."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the item in the marketplace.",
+          "enum": [
+            "listed",
+            "sold",
+            "shipped"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "title",
+        "price",
+        "imageUrl",
+        "createdAt",
+        "status"
+      ]
+    },
+    "Sale": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Sale",
+      "type": "object",
+      "description": "Represents a sale of an item on the ReFurrm Scan marketplace.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the sale.",
+          "format": "uuid"
+        },
+        "itemId": {
+          "type": "string",
+          "description": "Reference to the Item that was sold."
+        },
+        "buyerId": {
+          "type": "string",
+          "description": "Reference to the User who purchased the item."
+        },
+        "sellerId": {
+          "type": "string",
+          "description": "Reference to the User who sold the item."
+        },
+        "ambassadorId": {
+          "type": "string",
+          "description": "The ID of the Ambassador who facilitated the sale, if any."
+        },
+        "saleDate": {
+          "type": "string",
+          "description": "Date of the sale.",
+          "format": "date-time"
+        },
+        "salePrice": {
+          "type": "number",
+          "description": "Price at which the item was sold."
+        },
+        "ethicalContributionId": {
+          "type": "string",
+          "description": "Reference to the associated ethical contribution for this sale."
+        }
+      },
+      "required": [
+        "id",
+        "itemId",
+        "buyerId",
+        "sellerId",
+        "saleDate",
+        "salePrice"
+      ]
+    },
+    "Pickup": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Pickup",
+      "type": "object",
+      "description": "Represents a pickup request for a sold item.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the pickup request.",
+          "format": "uuid"
+        },
+        "saleId": {
+          "type": "string",
+          "description": "Reference to the Sale for which the pickup is requested."
+        },
+        "pickupDate": {
+          "type": "string",
+          "description": "Date and time of the scheduled pickup.",
+          "format": "date-time"
+        },
+        "address": {
+          "type": "string",
+          "description": "Address where the item needs to be picked up."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the pickup request (e.g., requested, scheduled, completed)."
+        }
+      },
+      "required": [
+        "id",
+        "saleId",
+        "pickupDate",
+        "address",
+        "status"
+      ]
+    },
+    "EthicalContribution": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EthicalContribution",
+      "type": "object",
+      "description": "Represents an ethical funding contribution made from a sale for the LEAN Foundation.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the contribution.",
+          "format": "uuid"
+        },
+        "saleId": {
+          "type": "string",
+          "description": "Reference to the Sale from which the contribution is made."
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of the ethical contribution."
+        },
+        "contributionDate": {
+          "type": "string",
+          "description": "Date of the contribution.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "saleId",
+        "amount",
+        "contributionDate"
+      ]
+    },
+    "ServiceRequest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ServiceRequest",
+      "type": "object",
+      "description": "Represents a user's request for a specialized Ambassador service.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the service request.",
+          "format": "uuid"
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user making the request."
+        },
+        "serviceType": {
+          "type": "string",
+          "description": "The type of service requested.",
+          "enum": ["cleanout", "organize", "downsize"]
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "The ZIP code where the service is needed."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes from the user about the service request, can include inventory scan results."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the request.",
+          "enum": ["PENDING_MATCH", "MATCHED", "NO_MATCH_FOUND", "COMPLETED"]
+        },
+        "assignedAmbassadorId": {
+          "type": "string",
+          "description": "The ID of the matched Ambassador, if any."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the request was created.",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "userId", "serviceType", "zipCode", "status", "createdAt"]
+    },
+    "AmbassadorApplication": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AmbassadorApplication",
+      "type": "object",
+      "description": "Represents an application to become a ReFurrm Ambassador.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the application."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user submitting the application."
+        },
+        "whyReFurrm": {
+          "type": "string",
+          "description": "The applicant's explanation for their interest in the mission."
+        },
+        "operationalExperience": {
+          "type": "string",
+          "description": "The applicant's self-reported operational or entrepreneurial experience."
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "The primary ZIP code the applicant wishes to serve."
+        },
+        "transportation": {
+          "type": "string",
+          "description": "The type of transportation the applicant has available."
+        },
+        "weeklyHours": {
+          "type": "string",
+          "description": "The applicant's stated weekly availability."
+        },
+        "videoIntroUrl": {
+          "type": "string",
+          "description": "An optional URL to a video introduction.",
+          "format": "uri"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the application.",
+          "enum": ["pending_ai_review", "pending_manual_review", "approved", "rejected", "waitlisted"]
+        },
+        "aiScore": {
+          "type": "number",
+          "description": "An AI-generated score indicating the applicant's fit."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the application was submitted.",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "userId", "whyReFurrm", "zipCode", "status", "createdAt"]
+    },
+     "PrivateAppraisal": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PrivateAppraisal",
+      "type": "object",
+      "description": "Represents a private item appraisal saved by a user, not for public listing. This is the user's personal log of AI valuation history.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the private appraisal (Log_ID)."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who saved the appraisal."
+        },
+        "itemName": {
+          "type": "string",
+          "description": "The final name of the item as edited by the user."
+        },
+        "aiSuggestedTitle": {
+            "type": "string",
+            "description": "The original title suggested by the AI."
+        },
+        "aiSuggestedDescription": {
+            "type": "string",
+            "description": "The original description snippet suggested by the AI."
+        },
+        "minPrice": { 
+            "type": "number",
+            "description": "The minimum price suggested by the AI (AI_Price_Min)." 
+        },
+        "maxPrice": { 
+            "type": "number",
+            "description": "The maximum price suggested by the AI (AI_Price_Max)."
+        },
+        "appraisalNote": { 
+            "type": "string",
+            "description": "The AI's justification for the price range (Justification_Text)."
+        },
+        "categoryTag": { 
+            "type": "string",
+            "description": "The AI-assigned category for the item."
+        },
+        "authenticityVerdict": { 
+            "type": "string",
+            "description": "The AI's verdict on the item's authenticity."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "A data URI or URL of the item's image.",
+          "format": "uri"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the appraisal was saved (Scan_Timestamp).",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "userId", "itemName", "createdAt"]
+    },
+    "CustodyUnit": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CustodyUnit",
+      "type": "object",
+      "description": "A header record for a storage unit or job, establishing a chain of custody.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID for the unit/job (e.g., AUCT-2025-001)."
+        },
+        "facilityRef": {
+          "type": "string",
+          "description": "The originating facility or location reference."
+        },
+        "agentId": {
+          "type": "string",
+          "description": "The ID of the ReFURRM Agent performing the work."
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Timestamp when the agent began the clean-out log.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "Timestamp when the agent finalized the log.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current processing status of the unit.",
+          "enum": ["In Progress", "Review", "Complete"]
+        }
+      },
+      "required": ["id", "facilityRef", "agentId", "startTime", "status"]
+    },
+    "InventoryItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "InventoryItem",
+      "type": "object",
+      "description": "An individual item scanned as part of a unit clean-out.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID for the specific item, can be tied to a physical tag."
+        },
+        "unitId": {
+          "type": "string",
+          "description": "Foreign key linking to the parent CustodyUnit."
+        },
+        "scanTime": {
+          "type": "string",
+          "description": "Exact moment the item was scanned into the system.",
+          "format": "date-time"
+        },
+        "aiClassification": {
+          "type": "string",
+          "description": "The initial AI classification for sorting.",
+          "enum": ["Resale", "Sensitive", "Donate", "Recycle"]
+        },
+        "isSensitive": {
+          "type": "boolean",
+          "description": "Set to TRUE if flagged as Legacy/Private, triggering human review."
+        },
+        "agentDecision": {
+          "type": "string",
+          "description": "The final disposition decision made by the agent.",
+          "enum": ["Price", "Donate", "Destroy"]
+        },
+        "itemPhotoUrl": {
+          "type": "string",
+          "description": "Secure link to the captured photo for verification.",
+          "format": "uri"
+        }
+      },
+      "required": ["id", "unitId", "scanTime", "aiClassification", "isSensitive"]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles, including their tier and subscription status.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        },
+        "subcollections": [
+            {
+                "path": "private_appraisals/{appraisalId}",
+                "definition": {
+                    "entityName": "PrivateAppraisal",
+                    "schema": { "$ref": "#/backend/entities/PrivateAppraisal" },
+                    "description": "A user's private log of saved appraisals, not for public sale."
+                }
+            }
+        ]
+      },
+      {
+        "path": "/items/{itemId}",
+        "definition": {
+          "entityName": "Item",
+          "schema": {
+            "$ref": "#/backend/entities/Item"
+          },
+          "description": "This collection contains all items listed on the marketplace. It includes a denormalized 'userId' to enable ownership-based security rules.",
+          "params": [
+            {
+              "name": "itemId",
+              "description": "The unique identifier for the item."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/sales/{saleId}",
+        "definition": {
+          "entityName": "Sale",
+          "schema": {
+            "$ref": "#/backend/entities/Sale"
+          },
+          "description": "Sales data is stored in a top-level collection. It includes denormalized 'itemId', 'buyerId', and 'sellerId' for authorization and querying.",
+          "params": [
+            {
+              "name": "saleId",
+              "description": "The unique identifier for the sale."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/pickups/{pickupId}",
+        "definition": {
+          "entityName": "Pickup",
+          "schema": {
+            "$ref": "#/backend/entities/Pickup"
+          },
+          "description": "Pickup requests for sold items.",
+          "params": [
+            {
+              "name": "pickupId",
+              "description": "The unique identifier for the pickup."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/ethical_contributions/{contributionId}",
+        "definition": {
+          "entityName": "EthicalContribution",
+          "schema": {
+            "$ref": "##backend/entities/EthicalContribution"
+          },
+          "description": "A ledger for all ethical contributions made from sales.",
+          "params": [
+            {
+              "name": "contributionId",
+              "description": "The unique identifier for the contribution."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/service_requests/{requestId}",
+        "definition": {
+          "entityName": "ServiceRequest",
+          "schema": {
+            "$ref": "#/backend/entities/ServiceRequest"
+          },
+          "description": "A collection of user requests for specialized Ambassador services.",
+          "params": [
+            {
+              "name": "requestId",
+              "description": "The unique identifier for the service request."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/ambassador_applications/{applicationId}",
+        "definition": {
+            "entityName": "AmbassadorApplication",
+            "schema": {
+                "$ref": "#/backend/entities/AmbassadorApplication"
+            },
+            "description": "A collection for storing all submitted Ambassador applications.",
+            "params": [
+                {
+                    "name": "applicationId",
+                    "description": "The unique identifier for the application."
+                }
+            ]
+        }
+      },
+      {
+        "path": "/custody_units/{unitId}",
+        "definition": {
+          "entityName": "CustodyUnit",
+          "schema": { "$ref": "#/backend/entities/CustodyUnit" },
+          "description": "Top-level records for each unit clean-out job, establishing chain of custody.",
+          "params": [
+            {
+              "name": "unitId",
+              "description": "The unique ID for the clean-out job."
+            }
+          ]
+        },
+        "subcollections": [
+          {
+            "path": "inventory_items/{itemId}",
+            "definition": {
+              "entityName": "InventoryItem",
+              "schema": { "$ref": "#/backend/entities/InventoryItem" },
+              "description": "Individual items scanned within a specific unit, linked to the parent job.",
+              "params": [
+                {
+                  "name": "itemId",
+                  "description": "The unique ID for the scanned item."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "reasoning": "The Firestore structure has been updated to support the core business logic. The User entity now includes 'tier', 'subscriptionStatus', and 'stripeCustomerId' to manage user roles and billing. The Item entity has a 'status' to track its lifecycle (listed, sold, shipped) and 'aiEstimatedValue'. The Sale entity now more clearly separates seller and buyer IDs and links to an EthicalContribution, which is its own top-level collection to serve as a proper ledger for the LEAN Foundation. A new 'ServiceRequest' entity and collection have been added to handle specialized service requests, linking users to Ambassadors. A new 'AmbassadorApplication' entity and collection have been added to manage the hiring pipeline for new Ambassadors, enabling AI-powered screening and manual review workflows."
+  }
+}
+
+    
